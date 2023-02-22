@@ -1,0 +1,21 @@
+﻿@model ParentModel
+@{
+    var templateName = "ChildrenModel1";
+    if (Model is ChildrenModel1)
+    {
+        templateName = "ChildrenModel1";
+    }
+    else if (Model is ChildrenModel2)
+    {
+        templateName = "ChildrenModel2";
+    }
+}
+<h3>Setting</h3>
+@Html.HiddenFor(c => c.Id)
+<div class="row">
+    <div class="col">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+</div>
+@Html.EditorFor(c => c, templateName)

@@ -1,8 +1,77 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+
+    var dataList = DataSource.DataList;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <table class="table table-bordered">
+        <tbody>
+            @foreach (var item in dataList)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td><a href="javascript:void(0);" data-id="@item.Id" class="btn btn-primary setting-btn" data-bs-toggle="modal" data-bs-target="#SettingFormModal">Setting</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+<div class="modal" id="SettingFormModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="SettingForm" asp-controller="Home" asp-action="Setting">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            const settingFormModal = $('#SettingFormModal')
+            settingFormModal.on('show.bs.modal', event => {
+                // Button that triggered the modal
+                var dataId = $(event.relatedTarget).data("id");
+                console.log(dataId);
+
+                const modalTitle = settingFormModal.find('.modal-title')
+                modalTitle.text("New setting");
+                var modalBody = settingFormModal.find(".modal-body");
+
+                $.ajax({
+                    url: "@Url.Action("Setting", "Home")?id=" + dataId,
+                    success: function(data) {
+                        modalBody.html(data);
+                    }
+                });
+            });
+
+            var settingForm = $("#SettingForm");
+            settingForm.on("click", "[type='submit']", function() {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Setting", "Home")",
+                    data: settingForm.serialize(),
+                    success: function(data) {
+                        console.log(data);
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
+}

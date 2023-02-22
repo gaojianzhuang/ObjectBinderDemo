@@ -1,0 +1,8 @@
+﻿@model ChildrenModel1
+@Html.Hidden("___Type", typeof(ChildrenModel1).AssemblyQualifiedName)
+<div class="row">
+    <div class="col">
+    <label asp-for="Address">Address</label>
+    <input asp-for="Address" class="form-control" />
+    </div>
+</div>
